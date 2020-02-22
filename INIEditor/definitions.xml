@@ -1,0 +1,2741 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<data>
+	<!-- +++++++++++++++ -->
+	<!--   DEFINITIONS   -->
+	<!-- +++++++++++++++ -->
+	
+	<!--	Definitions are the primary way of defining blocks for parsing.
+			Each definition consists of a block, which can contain other
+			blocks and parameters. A block is anything starting with [name]
+			and containing parameters (which typically are of the form 
+			name = value, with the possibility of comma-separated values).
+			Blocks defined within blocks are said to be children of the parent
+			block. They are used in instances where the block does not exist
+			independently but is in fact part of a preceding block (such as
+			collision group blocks for ships). -->
+	<definitions>
+		<!-- [GROUP] -->
+		<block name="Group">
+			<required>nickname,ids_name,ids_info</required>
+			<parameter name="ids_short_name">
+				<string behavior="name" />
+			</parameter>
+			<parameter name="rep">
+				<float>
+					<numeric>[-1,1]</numeric>
+				</float>
+				<string behavior="ref/Group" />
+			</parameter>
+		</block>
+		<!-- [SOUND] -->
+		<block name="Sound">
+			<required>nickname</required>
+			<parameter name="file">
+				<path>
+					<pattern>*.wav</pattern>
+				</path>
+			</parameter>
+			<parameter name="attenuation">
+				<int>
+					<numeric>]-inf,0]</numeric>
+				</int>
+			</parameter>
+			<parameter name="range" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="range" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="pitch_bendable" behavior="optional">
+				<boolean />
+			</parameter>
+			<parameter name="is_2d" behavior="optional">
+				<boolean />
+			</parameter>
+			<parameter name="streamer" behavior="optional">
+				<boolean />
+			</parameter>
+			<parameter name="crv_pitch" behavior="optional">
+				<float />
+			</parameter>
+			<parameter name="type" behavior="optional">
+				<string>
+					<pattern>interface</pattern>
+					<pattern>ambience</pattern>
+					<pattern>music</pattern>
+					<pattern>voice</pattern>
+					<pattern>normal</pattern>
+				</string>
+			</parameter>
+		</block>
+		<!-- [VOICE] -->
+		<block name="Voice">
+			<required>nickname</required>
+			<parameter name="script" behavior="repeatable">
+				<string />
+			</parameter>
+			<block name="Sound">
+				<parameter name="msg">
+					<string behavior="id" />
+				</parameter>
+				<parameter name="attenuation">
+					<int>
+						<numeric>]-inf,0]</numeric>
+					</int>
+				</parameter>
+				<parameter name="priority">
+					<int />
+				</parameter>
+				<parameter name="duration">
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+				</parameter>
+			</block>
+		</block>
+		<block name="Voice">
+			<parameter name="extend">
+				<string behavior="ref/Voice" />
+			</parameter>
+			<parameter name="script" behavior="repeatable">
+				<string />
+			</parameter>
+			<block name="Sound">
+				<parameter name="msg">
+					<string behavior="id" />
+				</parameter>
+				<parameter name="attenuation">
+					<int>
+						<numeric>]-inf,0]</numeric>
+					</int>
+				</parameter>
+				<parameter name="priority">
+					<int />
+				</parameter>
+				<parameter name="duration">
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+				</parameter>
+			</block>
+		</block>
+		<!-- [ENGINE] -->
+		<block name="Engine">
+			<required>nickname,ids_name,ids_info,mass,volume</required>
+			<parameter name="max_force">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="linear_drag">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="power_usage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="reverse_fraction">
+				<float />
+			</parameter>
+			<parameter name="flame_effect" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="trail_effect" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="cruise_charge_time">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="cruise_power_usage">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="cruise_loop_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="cruise_stop_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="cruise_start_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="cruise_disrupt_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="character_start_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="character_loop_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="character_pitch_range">
+				<float />
+				<float />
+			</parameter>
+			<parameter name="indestructible">
+				<boolean />
+			</parameter>
+			<parameter name="outside_cone_attenuation">
+				<float />
+			</parameter>
+			<parameter name="inside_sound_cone">
+				<float>
+					<numeric>[0,360]</numeric>
+				</float>
+			</parameter>
+			<parameter name="outside_sound_cone">
+				<float>
+					<numeric>[0,360]</numeric>
+				</float>
+			</parameter>
+			<parameter name="rumble_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="rumble_pitch_range" behavior="optional">
+				<float />
+				<float />
+			</parameter>
+			<parameter name="rumble_atten_range" behavior="optional">
+				<float />
+				<float />
+			</parameter>
+		</block>
+		<!-- [GOOD] -->
+		<!-- Shiphull variant -->
+		<block name="Good">
+			<required>nickname,ids_name</required>
+			<parameter name="category">
+				<string>
+					<pattern>shiphull</pattern>
+				</string>
+			</parameter>
+			<parameter name="ship">
+				<string behavior="ref/Ship" />
+			</parameter>
+			<parameter name="price">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="item_icon">
+				<path />
+			</parameter>
+		</block>
+		<!-- Ship variant -->
+		<block name="Good">
+			<required>nickname</required>
+			<parameter name="category">
+				<string>
+					<pattern>ship</pattern>
+				</string>
+			</parameter>
+			<parameter name="hull">
+				<string behavior="ref/Good" />
+			</parameter>
+			<parameter name="addon" behavior="repeatable">
+				<string behavior="ref/Power,Radar,Tractor,Engine,Scanner,Gun,ShieldGenerator,Thruster,CounterMeasureDropper,MineDropper,Light,AttachedFX,InternalFX,CloakingDevice" />
+				<string />
+				<int>
+					<numeric>]0,inf[</numeric>
+				</int>
+			</parameter>
+		</block>
+		<!-- Commodity variant -->
+		<block name="Good">
+			<required>nickname,msg_id_prefix</required>
+			<parameter name="category">
+				<string>
+					<pattern>commodity</pattern>
+				</string>
+			</parameter>
+			<parameter name="price">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="equipment">
+				<string behavior="ref/Commodity" />
+			</parameter>
+			<parameter name="combinable">
+				<boolean />
+			</parameter>
+			<parameter name="good_sell_price">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="bad_sell_price">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="good_buy_price">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="bad_buy_price">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="shop_archetype">
+				<path />
+			</parameter>
+			<parameter name="item_icon">
+				<path />
+			</parameter>
+			<parameter name="jump_dist">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+		</block>
+		<!-- Equipment variant -->
+		<block name="Good">
+			<required>nickname</required>
+			<parameter name="category">
+				<string>
+					<pattern>equipment</pattern>
+				</string>
+			</parameter>
+			<parameter name="equipment">
+				<string behavior="ref/Commodity,Gun,ShieldGenerator,Thruster,CounterMeasureDropper,MineDropper,CloakingDevice,Munition" />
+			</parameter>
+			<parameter name="price">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="combinable">
+				<boolean />
+			</parameter>
+			<parameter name="shop_archetype" behavior="optional">
+				<path />
+			</parameter>
+			<parameter name="item_icon" behavior="optional">
+				<path />
+			</parameter>
+			<parameter name="free_ammo" behavior="optional">
+				<string behavior="ref/Munition,Mine,CounterMeasure" />
+				<int>
+					<numeric>]0,inf[</numeric>
+				</int>
+			</parameter>
+		</block>
+		<!-- [LIGHT] -->
+		<block name="Light">
+			<required>nickname</required>
+			<parameter name="bulb_size" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="glow_size" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="color" behavior="optional">
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+			</parameter>
+			<parameter name="min_color" behavior="optional">
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+			</parameter>
+			<parameter name="flare_cone" behavior="optional">
+				<int>
+					<numeric>[0,360]</numeric>
+				</int>
+				<int>
+					<numeric>[0,360]</numeric>
+				</int>
+			</parameter>
+			<parameter name="blink_duration" behavior="optional">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="intensity" behavior="optional">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="avg_delay" behavior="optional">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="lightsource_cone" behavior="optional">
+				<int>
+					<numeric>[0,360]</numeric>
+				</int>
+			</parameter>
+			<parameter name="inherit" behavior="optional">
+				<string behavior="ref/Light" />
+			</parameter>
+		</block>
+		<!-- [BASEGOOD] -->
+		<!-- Commodity and Equipment variant -->
+		<block name="BaseGood">
+			<parameter name="base">
+				<string behavior="partid|ref2/Base" />
+			</parameter>
+			<parameter name="marketgood" behavior="repeatable">
+				<string behavior="ref/Good" />
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+				<float>
+					<numeric>[-1,1]</numeric>
+				</float>
+				<float />
+				<float />
+				<float />
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- Ship variant -->
+		<block name="BaseGood">
+			<parameter name="base">
+				<string behavior="partid|ref2/Base" />
+			</parameter>
+			<parameter name="marketgood" behavior="repeatable">
+				<string behavior="ref/Good" />
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+				<float>
+					<numeric>[-1,1]</numeric>
+				</float>
+				<float />
+				<float />
+				<float />
+				<float />
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [POWER] -->
+		<!-- Equipment variant -->
+		<block name="Power">
+			<required>nickname,ids_name,ids_info,volume,mass,DA_archetype,material_library,lootable</required>
+			<parameter name="capacity">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="charge_rate">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="thrust_capacity">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="thrust_charge_rate">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- Prop variant -->
+		<block name="Power">
+			<required>nickname,volume,mass,DA_archetype</required>
+			<parameter name="capacity">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="charge_rate">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [SCANNER] -->
+		<block name="Scanner">
+			<required>nickname,ids_name,ids_info,volume,mass,lootable</required>
+			<parameter name="range">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="cargo_scan_range">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [TRACTOR] -->
+		<block name="Tractor">
+			<required>nickname,ids_name,ids_info,volume,mass,lootable</required>
+			<parameter name="max_length">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="reach_speed">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="color">
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+				<int>
+					<numeric>[0,255]</numeric>
+				</int>
+			</parameter>
+			<parameter name="operating_effect">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="tractor_complete_snd">
+				<string behavior="ref/Sound" />
+			</parameter>
+		</block>
+		<!-- [LOOTCRATE] -->
+		<block name="LootCrate">
+			<required>nickname,DA_archetype,hit_pts,mass</required>
+			<parameter name="explosion_arch">
+				<string behavior="ref/Explosion" />
+			</parameter>
+		</block>
+		<!-- [COUNTERMEASURE] -->
+		<block name="CounterMeasure">
+			<required>nickname,ids_name,ids_info,hit_pts,mass,volume</required>
+			<parameter name="loot_appearance">
+				<string behavior="ref/LootCrate" />
+			</parameter>
+			<parameter name="units_per_container">
+				<int>
+					<numeric>[1,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="one_shot_sound">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="const_effect">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="lifetime">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="owner_safe_time">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="force_gun_ori">
+				<boolean />
+			</parameter>
+			<parameter name="requires_ammo">
+				<boolean />
+			</parameter>
+			<parameter name="linear_drag">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="range">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="diversion_pctg">
+				<float>
+					<numeric>]0,100]</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [COUNTERMEASUREDROPPER] -->
+		<block name="CounterMeasureDropper">
+			<required>nickname,ids_name,ids_info,DA_archetype,mass,volume,hit_pts,lootable</required>
+			<parameter name="hp_child">
+				<string />
+			</parameter>
+			<parameter name="explosion_resistance">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="debris_type">
+				<string behavior="ref/Debris" />
+			</parameter>
+			<parameter name="power_usage">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="refire_delay">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="muzzle_velocity">
+				<float />
+			</parameter>
+			<parameter name="flash_particle_name" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="flash_radius" behavior="optional">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="light_anim">
+				<string behavior="ref/LightAnim" />
+			</parameter>
+			<parameter name="projectile_archetype">
+				<string behavior="ref/CounterMeasure" />
+			</parameter>
+			<parameter name="separation_explosion">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="ai_range">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="phantom_physics">
+				<boolean />
+			</parameter>
+		</block>
+		<!-- [REPAIRKIT] -->
+		<block name="RepairKit">
+			<required>nickname,ids_name,ids_info,volume,mass,lootable,hit_pts</required>
+			<parameter name="loot_appearance">
+				<string behavior="ref/LootCrate" />
+			</parameter>
+			<parameter name="units_per_container">
+				<int>
+					<numeric>[1,inf[</numeric>
+				</int>
+			</parameter>
+		</block>
+		<!-- [SHIELDBATTERY] -->
+		<block name="ShieldBattery">
+			<required>nickname,ids_name,ids_info,volume,mass,lootable,hit_pts</required>
+			<parameter name="loot_appearance">
+				<string behavior="ref/LootCrate" />
+			</parameter>
+			<parameter name="units_per_container">
+				<int>
+					<numeric>[1,inf[</numeric>
+				</int>
+			</parameter>
+		</block>
+		<!-- [SHIELDGENERATOR] -->
+		<block name="ShieldGenerator">
+			<required>nickname,ids_name,ids_info,DA_archetype,hit_pts,mass,volume</required>
+			<parameter name="hp_child">
+				<string />
+			</parameter>
+			<parameter name="debris_type">
+				<string behavior="ref/Debris" />
+			</parameter>
+			<parameter name="regeneration_rate">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="constant_power_draw">
+				<float />
+			</parameter>
+			<parameter name="rebuild_power_draw">
+				<float />
+			</parameter>
+			<parameter name="max_capacity">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="offline_rebuild_time">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="offline_threshold">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="shield_hit_effects" behavior="repeatable">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="shield_collapse_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="shield_collapse_particle" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="shield_rebuilt_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="shield_type" behavior="optional">
+				<string />
+			</parameter>
+			<parameter name="toughness" behavior="optional">
+				<float />
+			</parameter>
+			<parameter name="hp_type" behavior="optional">
+				<string>
+					<regex>^hp_(((fighter|elite|freighter)_shield_special_[1-9]|10)|thruster)$</regex>
+				</string>
+			</parameter>
+			<parameter name="phantom_physics" behavior="optional">
+				<boolean />
+			</parameter>
+			<parameter name="envmap_material" behavior="optional">
+				<string />
+			</parameter>
+			<parameter name="separation_explosion" behavior="optional">
+				<string />
+			</parameter>
+		</block>
+		<!-- [SHIELD] -->
+		<block name="Shield">
+			<required>nickname,DA_archetype</required>
+			<parameter name="hp_child">
+				<string />
+			</parameter>
+		</block>
+		<!-- [COMMODITY] -->
+		<block name="Commodity">
+			<required>nickname,ids_name,ids_info,volume,hit_pts</required>
+			<parameter name="units_per_container">
+				<int>
+					<numeric>]0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="loot_appearance">
+				<string behavior="ref/LootCrate" />
+			</parameter>
+			<parameter name="pod_appearance" behavior="optional">
+				<string behavior="ref/CargoPod" />
+			</parameter>
+			<parameter name="decay_per_second">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [ARMOR] -->
+		<block name="Armor">
+			<required>nickname</required>
+			<parameter name="hit_pts_scale">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [CARGOPOD] -->
+		<block name="CargoPod">
+			<required>nickname,DA_archetype,material_library,hit_pts,mass</required>
+			<parameter name="hp_child">
+				<string />
+			</parameter>
+			<parameter name="debris_type">
+				<string behavior="ref/Debris" />
+			</parameter>
+		</block>
+		<!-- [INTERNALFX] -->
+		<block name="InternalFX">
+			<required>nickname</required>
+			<parameter name="use_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="use_animation" behavior="optional">
+				<string />
+			</parameter>
+		</block>
+		<!-- [ATTACHEDFX] -->
+		<block name="AttachedFX">
+			<required>nickname</required>
+			<parameter name="particles">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="use_throttle" behavior="optional">
+				<boolean />
+			</parameter>
+		</block>
+		<!-- [THRUSTER] -->
+		<block name="Thruster">
+			<required>nickname,ids_name,ids_info,DA_archetype,material_library,hit_pts,mass,volume,lootable,LODranges</required>
+			<parameter name="hp_child">
+				<string />
+			</parameter>
+			<parameter name="debris_type">
+				<string behavior="ref/Debris" />
+			</parameter>
+			<parameter name="explosion_resistance">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="max_force">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="power_usage">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="separation_explosion">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="particles" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="hp_particles" behavior="optional">
+				<string />
+			</parameter>
+		</block>
+		<!-- [MOTOR] -->
+		<block name="Motor">
+			<required>nickname</required>
+			<parameter name="lifetime">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="accel">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="delay">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [EXPLOSION] -->
+		<block name="Explosion">
+			<required>nickname</required>
+			<parameter name="lifetime">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="process">
+				<string>
+					<pattern>disappear</pattern>
+					<pattern>shatter</pattern>
+					<pattern>none</pattern>
+				</string>
+			</parameter>
+			<parameter name="strength" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="radius" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="hull_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="energy_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="impulse" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="effect" behavior="optional">
+				<string behavior="ref/Effect" />
+				<float>
+					<numeric>[0,1]</numeric>
+				</float>
+			</parameter>
+			<parameter name="debris_impulse" behavior="optional">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="debris_type" behavior="optional">
+				<string behavior="ref/Debris" />
+				<float>
+					<numeric>[0,1]</numeric>
+				</float>
+			</parameter>
+			<parameter name="innards_debris_start_time" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="innards_debris_num" behavior="optional">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="innards_debris_radius" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="innards_debris_object" behavior="optional">
+				<string behavior="ref/Simple" />
+			</parameter>
+		</block>
+		<!-- [MUNITION] -->
+		<!-- Gun variant -->
+		<block name="Munition">
+			<required>nickname,mass,volume,hit_pts</required>
+			<parameter name="hp_type">
+				<string>
+					<pattern>hp_gun</pattern>
+					<pattern>hp_torpedo</pattern>
+				</string>
+			</parameter>
+			<parameter name="requires_ammo">
+				<boolean />
+			</parameter>
+			<parameter name="hull_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="energy_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="weapon_type">
+				<string behavior="ref/WeaponType" />
+			</parameter>
+			<parameter name="one_shot_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="munition_hit_effect" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="const_effect" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="lifetime">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="force_gun_ori">
+				<boolean />
+			</parameter>
+			<parameter name="units_per_container" behavior="optional">
+				<int>
+					<numeric>]0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="loot_appearance" behavior="optional">
+				<string behavior="ref/LootCrate" />
+			</parameter>
+			<parameter name="explosion_arch" behavior="optional">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="cruise_disruptor" behavior="optional">
+				<boolean />
+			</parameter>
+		</block>
+		<!-- Missile variant -->
+		<block name="Munition">
+			<required>nickname,mass,volume,hit_pts,DA_archetype</required>
+			<parameter name="hp_type">
+				<string>
+					<pattern>hp_gun</pattern>
+					<pattern>hp_torpedo</pattern>
+				</string>
+			</parameter>
+			<parameter name="requires_ammo">
+				<boolean />
+			</parameter>
+			<parameter name="hull_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="energy_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="weapon_type" behavior="optional">
+				<string behavior="ref/WeaponType" />
+			</parameter>
+			<parameter name="one_shot_sound">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="const_effect">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="lifetime">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="force_gun_ori">
+				<boolean />
+			</parameter>
+			<parameter name="cruise_disruptor" behavior="optional">
+				<boolean />
+			</parameter>
+			<parameter name="units_per_container" behavior="optional">
+				<int>
+					<numeric>]0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="loot_appearance" behavior="optional">
+				<string behavior="ref/LootCrate" />
+			</parameter>
+			<parameter name="explosion_arch" behavior="optional">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="detonation_dist">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="motor">
+				<string behavior="ref/Motor" />
+			</parameter>
+			<parameter name="hp_trail_parent">
+				<string />
+			</parameter>
+			<parameter name="seeker">
+				<string>
+					<pattern>LOCK</pattern>
+					<pattern>DUMB</pattern>
+				</string>
+			</parameter>
+			<parameter name="time_to_lock">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="seeker_range">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="seeker_fov_deg">
+				<float>
+					<numeric>[0,180]</numeric>
+				</float>
+			</parameter>
+			<parameter name="max_angular_velocity">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [GUN] -->
+		<block name="Gun">
+			<required>nickname,ids_name,ids_info,DA_archetype,hit_pts,volume,mass,lootable,LODranges</required>
+			<parameter name="hp_child">
+				<string />
+			</parameter>
+			<parameter name="debris_type">
+				<string behavior="ref/Debris" />
+			</parameter>
+			<parameter name="explosion_resistance" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="hp_gun_type">
+				<string>
+					<regex>^hp_(((turret|gun|torpedo)_special_[1-9]|10)|turret)$</regex>
+				</string>
+			</parameter>
+			<parameter name="damage_per_fire" behavior="optional">
+				<float />
+			</parameter>
+			<parameter name="power_usage">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="refire_delay">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="muzzle_velocity">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="dispersion_angle" behavior="optional">
+				<float>
+					<numeric>[0,360]</numeric>
+				</float>
+			</parameter>
+			<parameter name="use_animation" behavior="optional">
+				<string />
+			</parameter>
+			<parameter name="toughness">
+				<float />
+			</parameter>
+			<parameter name="flash_particle_name" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="flash_radius" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="light_anim" behavior="optional">
+				<string behavior="ref/LightAnim" />
+			</parameter>
+			<parameter name="projectile_archetype">
+				<string behavior="ref/Munition" />
+			</parameter>
+			<parameter name="separation_explosion">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="auto_turret">
+				<boolean />
+			</parameter>
+			<parameter name="turn_rate">
+				<float>
+					<numeric>[0,360]</numeric>
+				</float>
+			</parameter>
+			<parameter name="phantom_physics" behavior="optional">
+				<boolean />
+			</parameter>
+			<parameter name="dry_fire_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+		</block>
+		<!-- [MINE] -->
+		<block name="Mine">
+			<required>nickname,mass,volume,hit_pts,DA_archetype</required>
+			<parameter name="hp_type">
+				<string>
+					<pattern>hp_gun</pattern>
+					<pattern>hp_torpedo</pattern>
+				</string>
+			</parameter>
+			<parameter name="requires_ammo">
+				<boolean />
+			</parameter>
+			<parameter name="hull_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="energy_damage" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="weapon_type">
+				<string behavior="ref/WeaponType" />
+			</parameter>
+			<parameter name="one_shot_sound">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="munition_hit_effect">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="const_effect">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="lifetime">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="force_gun_ori">
+				<boolean />
+			</parameter>
+			<parameter name="units_per_container" behavior="optional">
+				<int>
+					<numeric>]0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="loot_appearance" behavior="optional">
+				<string behavior="ref/LootCrate" />
+			</parameter>
+			<parameter name="explosion_arch" behavior="optional">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="detonation_dist">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="owner_safe_time">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="linear_drag">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="top_speed">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="acceleration">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="cruise_disruptor" behavior="optional">
+				<boolean />
+			</parameter>
+		</block>
+		<!-- [MINEDROPPER] -->
+		<block name="MineDropper">
+			<required>nickname,ids_name,ids_info,DA_archetype,hit_pts,volume,mass,lootable,LODranges</required>
+			<parameter name="hp_child">
+				<string />
+			</parameter>
+			<parameter name="debris_type">
+				<string behavior="ref/Debris" />
+			</parameter>
+			<parameter name="explosion_resistance">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="hp_gun_type">
+				<string>
+					<regex>^hp_(turret|gun|torpedo)_special_[1-9]|10$</regex>
+				</string>
+			</parameter>
+			<parameter name="damage_per_fire">
+				<float />
+			</parameter>
+			<parameter name="power_usage">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="refire_delay">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="muzzle_velocity">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="dispersion_angle" behavior="optional">
+				<float>
+					<numeric>[0,360]</numeric>
+				</float>
+			</parameter>
+			<parameter name="use_animation" behavior="optional">
+				<string />
+			</parameter>
+			<parameter name="dry_fire_sound" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="toughness">
+				<float />
+			</parameter>
+			<parameter name="flash_particle_name" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="flash_radius" behavior="optional">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="light_anim">
+				<string behavior="ref/LightAnim" />
+			</parameter>
+			<parameter name="projectile_archetype">
+				<string behavior="ref/Munition" />
+			</parameter>
+			<parameter name="separation_explosion">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="auto_turret">
+				<boolean />
+			</parameter>
+			<parameter name="turn_rate">
+				<float>
+					<numeric>[0,360]</numeric>
+				</float>
+			</parameter>
+			<parameter name="phantom_physics">
+				<boolean />
+			</parameter>
+		</block>
+		<!-- [WEAPONTYPE] -->
+		<block name="WeaponType">
+			<required>nickname</required>
+			<parameter name="shield_mod" behavior="repeatable">
+				<string />
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [BEAMBOLT] -->
+		<block name="BeamBolt">
+			<required>nickname</required>
+
+			<parameter name="tip_length">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="core_length">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="tail_length">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="head_width">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="core_width">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="sec_core_width">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+
+			<parameter name="tip_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="core_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="sec_core_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="outter_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="sec_outter_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="tail_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+
+			<parameter name="head_brightness">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="trail_brightness">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="flash_size">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="head_texture">
+				<string>
+					<pattern>ball</pattern>
+					<pattern>star</pattern>
+					<pattern>null</pattern>
+				</string>
+			</parameter>
+			<parameter name="trail_texture">
+				<string>
+					<pattern>thin</pattern>
+					<pattern>wide</pattern>
+					<pattern>null</pattern>
+				</string>
+			</parameter>
+		</block>
+		<!-- [BEAMSPEAR] -->
+		<block name="BeamSpear">
+			<required>nickname</required>
+
+			<parameter name="tip_length">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="core_length">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="tail_length">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="head_width">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="core_width">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="sec_core_width">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+
+			<parameter name="tip_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="core_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="sec_core_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="outter_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="sec_outter_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			<parameter name="tail_color">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+
+			<parameter name="head_brightness">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="trail_brightness">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="flash_size">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="head_texture">
+				<string>
+					<pattern>ball</pattern>
+					<pattern>star</pattern>
+					<pattern>null</pattern>
+				</string>
+			</parameter>
+			<parameter name="trail_texture">
+				<string>
+					<pattern>thin</pattern>
+					<pattern>wide</pattern>
+					<pattern>null</pattern>
+				</string>
+			</parameter>
+		</block>
+		<!-- [EFFECTTYPE] -->
+		<block name="EffectType">
+			<required>nickname</required>
+			<parameter name="priority">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="generic_priority">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="lod_type">
+				<string>
+					<pattern>EFT_LOD_NONE</pattern>
+					<pattern>EFT_LOD_MEDIUM</pattern>
+					<pattern>EFT_LOD_LARGE</pattern>
+				</string>
+			</parameter>
+			<parameter name="radius">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="visibility">
+				<string>
+					<pattern>EXIST_OFFSCREEN</pattern>
+					<pattern>CULL_OFFSCREEN</pattern>
+				</string>
+			</parameter>
+			<parameter name="update">
+				<string>
+					<pattern>UPDATE_OFFSCREEN</pattern>
+					<pattern>CULL_UPDATE</pattern>
+				</string>
+			</parameter>
+			<parameter name="run_time">
+				<int>
+					<numeric>[-1,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="pbubble">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [EFFECT] -->
+		<block name="Effect">
+			<required>nickname</required>
+			<parameter name="effect_type">
+				<string behavior="ref/EffectType" />
+			</parameter>
+			<parameter name="vis_beam" behavior="optional">
+				<string behavior="ref/BeamBolt,BeamSpear" />
+			</parameter>
+			<parameter name="vis_effect" behavior="optional">
+				<string behavior="ref/VisEffect" />
+			</parameter>
+			<parameter name="vis_generic" behavior="optional">
+				<string behavior="ref/VisEffect" />
+			</parameter>
+			<parameter name="snd_effect" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="lgt_effect" behavior="optional">
+				<string behavior="ref/LightAnim" />
+			</parameter>
+			<parameter name="lgt_range_scale" behavior="optional">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="lgt_radius" behavior="optional">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+		</block>
+		<!-- [VISEFFECT] -->
+		<block name="VisEffect">
+			<required>nickname</required>
+			<parameter name="alchemy">
+				<path />
+			</parameter>
+			<parameter name="effect_crc">
+				<int />
+			</parameter>
+			<parameter name="textures" behavior="repeatable">
+				<path />
+			</parameter>
+		</block>
+		<!-- [DEBRIS] -->
+		<block name="Debris">
+			<required>nickname</required>
+			<parameter name="death_method">
+				<string>
+					<pattern>exploding</pattern>
+					<pattern>vanishing</pattern>
+				</string>
+			</parameter>
+			<parameter name="lifetime">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="linear_drag">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="angular_drag">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="trail" behavior="optional">
+				<string behavior="ref/Effect" />
+			</parameter>
+			<parameter name="explosion" behavior="optional">
+				<string behavior="ref/Explosion" />
+			</parameter>
+		</block>
+		<!-- [FUSE] -->
+		<block name="Fuse">
+			<parameter name="name">
+				<string behavior="id" />
+			</parameter>
+			<parameter name="lifetime">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="death_fuse" behavior="optional">
+				<boolean />
+			</parameter>
+			<block name="dump_cargo">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="origin_hardpoint">
+					<string />
+				</parameter>
+			</block>
+			<block name="destroy_root">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+			</block>
+			<block name="destroy_group">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="group_name">
+					<string />
+				</parameter>
+				<parameter name="fate">
+					<string>
+						<pattern>debris</pattern>
+						<pattern>disappear</pattern>
+					</string>
+				</parameter>
+			</block>
+			<block name="destroy_hp_attachment">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="hardpoint">
+					<string />
+				</parameter>
+				<parameter name="fate">
+					<string>
+						<pattern>debris</pattern>
+						<pattern>disappear</pattern>
+					</string>
+				</parameter>
+			</block>
+			<block name="start_cam_particles">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="effect">
+					<string behavior="ref/Effect" />
+				</parameter>
+				<parameter name="pos_offset" behavior="optional">
+					<float />
+					<float />
+					<float />
+				</parameter>
+				<parameter name="ori_offset" behavior="optional">
+					<float>
+						<numeric>[0,360]</numeric>
+					</float>
+					<float>
+						<numeric>[0,360]</numeric>
+					</float>
+					<float>
+						<numeric>[0,360]</numeric>
+					</float>
+				</parameter>
+			</block>
+			<block name="start_effect">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="attached">
+					<boolean />
+				</parameter>
+				<parameter name="effect">
+					<string behavior="ref/Effect" />
+				</parameter>
+				<parameter name="pos_offset" behavior="optional">
+					<float />
+					<float />
+					<float />
+				</parameter>
+				<parameter name="ori_offset" behavior="optional">
+					<float>
+						<numeric>[0,360]</numeric>
+					</float>
+					<float>
+						<numeric>[0,360]</numeric>
+					</float>
+					<float>
+						<numeric>[0,360]</numeric>
+					</float>
+				</parameter>
+			</block>
+			<block name="tumble">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="ang_drag_scale">
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+				</parameter>
+				<parameter name="turn_throttle_x">
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+				</parameter>
+				<parameter name="turn_throttle_y">
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+				</parameter>
+				<parameter name="turn_throttle_z">
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+				</parameter>
+				<parameter name="throttle">
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+					<float>
+						<numeric>[0,inf[</numeric>
+					</float>
+				</parameter>
+			</block>
+			<block name="ignite_fuse">
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="at_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="fuse_t">
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+				</parameter>
+				<parameter name="fuse">
+					<string behavior="ref/Fuse" />
+				</parameter>
+			</block>
+		</block>
+		<!-- [LIGHTANIM] -->
+		<block name="LightAnim">
+			<parameter name="name">
+				<string behavior="id" />
+			</parameter>
+			<parameter name="frame" behavior="repeatable">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,1]</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [SOLAR] -->
+		<block name="Solar">
+			<required>nickname,ids_name,ids_info,LODranges,DA_archetype,material_library,mass,hit_pts</required>
+			<parameter name="type">
+				<string>
+					<pattern>STATION</pattern>
+					<pattern>SATELLITE</pattern>
+					<pattern>DESTROYABLE_DEPOT</pattern>
+					<pattern>WEAPONS_PLATFORM</pattern>
+					<pattern>MISSION_SATELLITE</pattern>
+					<pattern>PLANET</pattern>
+					<pattern>SUN</pattern>
+					<pattern>NON_TARGETABLE</pattern>
+					<pattern>JUMP_GATE</pattern>
+					<pattern>JUMP_HOLE</pattern>
+					<pattern>DOCKING_RING</pattern>
+					<pattern>TRADELANE_RING</pattern>
+					<pattern>AIRLOCK_GATE</pattern>
+					<pattern>WAYPOINT</pattern>
+				</string>
+			</parameter>
+			<parameter name="envmap_material">
+				<string />
+			</parameter>
+			<parameter name="docking_sphere" behavior="repeatable">
+				<string>
+					<pattern>berth</pattern>
+					<pattern>moor_medium</pattern>
+					<pattern>moor_large</pattern>
+					<pattern>jump</pattern>
+				</string>
+				<string />
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="docking_sphere" behavior="repeatable">
+				<string>
+					<pattern>berth</pattern>
+					<pattern>moor_medium</pattern>
+					<pattern>moor_large</pattern>
+					<pattern>jump</pattern>
+				</string>
+				<string />
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+				<string />
+			</parameter>
+			<parameter name="docking_camera" behavior="optional">
+				<float />
+			</parameter>
+			<parameter name="loadout">
+				<string behavior="ref/Loadout" />
+			</parameter>
+			<parameter name="solar_radius">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="surface_hit_effects" behavior="repeatable">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+				<string behavior="ref/Effect|repeatable" />
+			</parameter>
+			<parameter name="shape_name">
+				<string>
+					<pattern>NNM_SM_MPLATFORM</pattern>
+					<pattern>NAV_largestation</pattern>
+					<pattern>NAV_depot</pattern>
+					<pattern>NAV_weaponplatform</pattern>
+					<pattern>NAV_smallstation</pattern>
+					<pattern>NNM_SM_MEDIUM_FOREST_MOON</pattern>
+					<pattern>NNM_SM_SMALL_ICE_MOON</pattern>
+					<pattern>NNM_SM_MEDIUM_ROCKY_MOON</pattern>
+					<pattern>NNM_SM_SMALL_DESERT_MOON</pattern>
+					<pattern>NNM_SM_SUN</pattern>
+					<pattern>NNM_SM_MINING</pattern>
+					<pattern>NNM_SM_COMMUNICATIONS</pattern>
+					<pattern>NAV_dockingrings</pattern>
+					<pattern>NAV_jumpgate</pattern>
+					<pattern>NAV_jumphole</pattern>
+					<pattern>NNM_SM_ROCK_ASTEROID</pattern>
+					<pattern>NNM_SM_NAVBUOY</pattern>
+					<pattern>NAV_lootabledepot</pattern>
+					<pattern>NAV_surpriseX</pattern>
+					<pattern>NAV_outpost</pattern>
+				</string>
+			</parameter>
+			<parameter name="fuse" behavior="repeatable">
+				<string behavior="ref/Fuse" />
+				<float>
+					<numeric>[0,1]</numeric>
+				</float>
+				<int>
+					<numeric>[-1,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="explosion_arch" behavior="optional">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="destructible" behavior="optional">
+				<boolean />
+			</parameter>
+			<block name="CollisionGroup">
+				<required>mass,hit_pts</required>
+				<parameter name="obj">
+					<string behavior="id" />
+				</parameter>
+				<parameter name="separable">
+					<boolean />
+				</parameter>
+				<parameter name="debris_type">
+					<string behavior="ref/Debris" />
+				</parameter>
+				<parameter name="root_health_proxy">
+					<boolean />
+				</parameter>
+				<parameter name="dmg_hp" behavior="optional">
+					<string />
+				</parameter>
+				<parameter name="dmg_obj" behavior="optional">
+					<string behavior="ref/Simple" />
+				</parameter>
+				<parameter name="group_dmg_hp" behavior="optional">
+					<string />
+				</parameter>
+				<parameter name="group_dmg_obj" behavior="optional">
+					<string behavior="ref/Simple" />
+				</parameter>
+				<parameter name="fuse" behavior="repeatable">
+					<string behavior="ref/Fuse" />
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<int>
+						<numeric>[-1,inf[</numeric>
+					</int>
+				</parameter>
+			</block>
+			<block name="Simple">
+				<required>nickname,da_archetype,material_library,mass</required>
+			</block>
+		</block>
+		<!-- [SHIP] -->
+		<block name="Ship">
+			<required>nickname,ids_name,ids_info,DA_archetype,material_library,LODranges,mass,hit_pts</required>
+			<parameter name="ids_info1">
+				<int behavior="info" />
+			</parameter>
+			<parameter name="ids_info2">
+				<int behavior="info" />
+			</parameter>
+			<parameter name="ids_info3">
+				<int behavior="info" />
+			</parameter>
+			<parameter name="ship_class">
+				<int>
+					<regex>[0-3]</regex>
+				</int>
+			</parameter>
+			<parameter name="mission_property">
+				<string>
+					<pattern>can_use_berths</pattern>
+					<pattern>can_use_large_moors</pattern>
+					<pattern>can_use_med_moors</pattern>
+				</string>
+			</parameter>
+			<parameter name="type">
+				<string>
+					<pattern>FIGHTER</pattern>
+					<pattern>FREIGHTER</pattern>
+					<pattern>GUNBOAT</pattern>
+					<pattern>CRUISER</pattern>
+					<pattern>CAPITAL</pattern>
+				</string>
+			</parameter>
+			<parameter name="fuse" behavior="repeatable">
+				<string behavior="ref/Fuse" />
+				<float>
+					<numeric>[0,1]</numeric>
+				</float>
+				<int>
+					<numeric>[-1,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="camera_offset">
+				<float />
+				<float />
+			</parameter>
+			<parameter name="camera_horizontal_turn_angle">
+				<float>
+					<numeric>[0,180]</numeric>
+				</float>
+			</parameter>
+			<parameter name="camera_vertical_turn_up_angle">
+				<float>
+					<numeric>[0,180]</numeric>
+				</float>
+			</parameter>
+			<parameter name="camera_vertical_turn_down_angle">
+				<float>
+					<numeric>[0,180]</numeric>
+				</float>
+			</parameter>
+			<parameter name="camera_turn_look_ahead_slerp_amount">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="camera_angular_acceleration">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="hold_size">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="linear_drag">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="steering_torque">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="angular_drag">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="rotation_inertia">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="nudge_force">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="strafe_force">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="strafe_power_usage">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+			</parameter>
+			<parameter name="num_exhaust_nozzles">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="max_bank_angle">
+				<float>
+					<numeric>[0,180]</numeric>
+				</float>
+			</parameter>
+			<parameter name="envmap_material">
+				<string />
+			</parameter>
+			<parameter name="cockpit" behavior="optional">
+				<path />
+			</parameter>
+			<parameter name="pilot_mesh" behavior="optional">
+				<string behavior="ref/Simple" />
+			</parameter>
+			<parameter name="explosion_arch" behavior="optional">
+				<string behavior="ref/Explosion" />
+			</parameter>
+			<parameter name="surface_hit_effects" behavior="repeatable">
+				<float>
+					<numeric>[0,inf[</numeric>
+				</float>
+				<string behavior="ref/Effect|repeatable" />
+			</parameter>
+			<parameter name="nanobot_limit">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="shield_battery_limit">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="HP_tractor_source">
+				<string />
+			</parameter>
+			<parameter name="hp_type" behavior="repeatable">
+				<string>
+					<regex>^hp_((turret|gun|torpedo|freighter_shield|elite_shield|fighter_shield)_special_[1-9]|10)|mine_dropper|countermeasure_dropper$</regex>
+				</string>
+				<string behavior="repeatable" />
+			</parameter>
+			<parameter name="shield_link">
+				<string />
+				<string behavior="repeatable" />
+			</parameter>
+			<parameter name="bay_door_anim" behavior="optional">
+				<string />
+			</parameter>
+			<parameter name="bay_doors_open_snd" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="bay_doors_close_snd" behavior="optional">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="HP_bay_surface" behavior="optional">
+				<string />
+			</parameter>
+			<parameter name="HP_bay_external" behavior="optional">
+				<string />
+			</parameter>
+			<block name="CollisionGroup">
+				<required>mass,hit_pts</required>
+				<parameter name="obj">
+					<string behavior="id" />
+				</parameter>
+				<parameter name="separable">
+					<boolean />
+				</parameter>
+				<parameter name="debris_type">
+					<string behavior="ref/Debris" />
+				</parameter>
+				<parameter name="root_health_proxy">
+					<boolean />
+				</parameter>
+				<parameter name="dmg_hp" behavior="optional">
+					<string />
+				</parameter>
+				<parameter name="dmg_obj" behavior="optional">
+					<string behavior="ref/Simple" />
+				</parameter>
+				<parameter name="group_dmg_hp" behavior="optional">
+					<string />
+				</parameter>
+				<parameter name="group_dmg_obj" behavior="optional">
+					<string behavior="ref/Simple" />
+				</parameter>
+				<parameter name="fuse" behavior="repeatable">
+					<string behavior="ref/Fuse" />
+					<float>
+						<numeric>[0,1]</numeric>
+					</float>
+					<int>
+						<numeric>[-1,inf[</numeric>
+					</int>
+				</parameter>
+			</block>
+			<block name="Simple">
+				<required>nickname,da_archetype,material_library,mass</required>
+			</block>
+		</block>
+		<block name="Simple">
+			<required>nickname,da_archetype,material_library,mass</required>
+		</block>
+		
+		<!-- [LOADOUT] -->
+		<block name="Loadout">
+			<required>nickname</required>
+			<parameter name="archetype">
+				<string behavior="ref/Ship,Solar" />
+			</parameter>
+			<parameter name="equip" behavior="repeatable">
+				<string behavior="ref/Power,Radar,Tractor,Engine,Scanner,InternalFX" />
+			</parameter>
+			<parameter name="equip" behavior="repeatable">
+				<string behavior="ref/Gun,ShieldGenerator,Thruster,CounterMeasureDropper,MineDropper,Light,AttachedFX,CloakingDevice" />
+				<string />
+				<int>
+					<numeric>[1,inf[</numeric>
+				</int>
+			</parameter>
+			<parameter name="cargo" behavior="repeatable">
+				<string behavior="ref/Good" />
+				<int>
+					<numeric>[1,inf[</numeric>
+				</int>
+			</parameter>
+		</block>
+		
+		<!-- [MUSIC] -->
+		<block name="Music">
+			<parameter name="space">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="danger">
+				<string behavior="ref/Sound" />
+			</parameter>
+			<parameter name="battle">
+				<string behavior="ref/Sound" />
+			</parameter>
+		</block>
+		
+		<!-- [OBJECT] -->
+		<block name="Object">
+			<parameter name="pos">
+				<float />
+				<float />
+				<float />
+			</parameter>
+			<parameter name="rotate" behavior="optional">
+				<float />
+				<float />
+				<float />
+			</parameter>
+			<parameter name="spin" behavior="optional">
+				<float />
+				<float />
+				<float />
+			</parameter>
+			
+			<parameter name="archetype">
+				<string behavior="ref/Solar" />
+			</parameter>
+			
+			<parameter name="loadout" behavior="optional">
+				<string behavior="ref/Loadout" />
+			</parameter>
+			
+			<parameter name="pilot" behavior="optional">
+				<string behavior="ref/Pilot" />
+			</parameter>
+			
+			<parameter name="atmosphere_range" behavior="optional">
+				<float>
+					<numeric>]0,inf[</numeric>
+				</float>
+			</parameter>
+			
+			<parameter name="visit" behavior="optional">
+				<int>
+					<numeric>[0,inf[</numeric>
+				</int>
+			</parameter>
+			
+			<parameter name="star" behavior="optional">
+				<string behavior="ref/Star" />
+			</parameter>
+			
+			<parameter name="jump_effect" behavior="optional">
+				<string />
+			</parameter>
+			
+			<parameter name="reputation" behavior="optional">
+				<string behavior="ref/Group" />
+			</parameter>
+			
+			<parameter name="behavior" behavior="optional">
+				<string />
+			</parameter>
+			
+			<parameter name="difficulty_level" behavior="optional">
+				<int>
+					<numeric>[1,inf[</numeric>
+				</int>
+			</parameter>
+			
+			<parameter name="goto" behavior="optional">
+				<string behavior="ref/System" />
+				<string behavior="ref/Object" />
+				<string />
+			</parameter>
+			
+			<parameter name="dock_with" behavior="optional">
+				<string behavior="ref/Base" />
+			</parameter>
+			
+			<parameter name="base" behavior="optional">
+				<string behavior="ref/Base" />
+			</parameter>
+			
+			<parameter name="voice" behavior="optional">
+				<string behavior="ref/Voice" />
+			</parameter>
+			
+			<parameter name="space_costume" behavior="optional">
+				<string behavior="ref/Head" />
+				<string behavior="ref/Body" />
+				<string behavior="ref/Accessory|repeatable" />
+			</parameter>
+			
+			<parameter name="space_costume" behavior="optional">
+				<string>
+					<pattern>\s*</pattern>
+				</string>
+				<string behavior="ref/Body" />
+				<string behavior="ref/Accessory|repeatable" />
+			</parameter>
+			
+			<parameter name="ambient_color" behavior="optional">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+			
+			<parameter name="burn_color" behavior="optional">
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+				<float>
+					<numeric>[0,255]</numeric>
+				</float>
+			</parameter>
+		</block>
+		<!-- [MBASE] -->
+		<block name="MBase">
+			<required>nickname</required>
+			
+			<parameter name="local_faction">
+				<string behavior="ref/Group" />
+			</parameter>
+			
+			<parameter name="diff">
+				<int>
+					<numeric>[1,25]</numeric>
+				</int>
+			</parameter>
+			
+			<block name="MVendor">
+				<parameter name="num_offers">
+					<int />
+					<int />
+				</parameter>
+			</block>
+			
+			<block name="BaseFaction">
+				<parameter name="faction">
+					<string behavior="ref/Group" />
+				</parameter>
+				
+				<parameter name="weight">
+					<float>
+						<numeric>]0,inf[</numeric>
+					</float>
+				</parameter>
+				
+				<parameter name="offers_missions">
+					<boolean />
+				</parameter>
+				
+				<parameter name="npc" behavior="repeatable">
+					<string behavior="ref/GF_NPC" />
+				</parameter>
+			</block>
+			
+			<block name="GF_NPC">
+				<required>nickname</required>
+				
+				<parameter name="individual_name">
+					<int />
+				</parameter>
+				
+				<parameter name="head">
+					<string behavior="ref/Head" />
+				</parameter>
+				
+				<parameter name="body">
+					<string behavior="ref/Body" />
+				</parameter>
+				
+				<parameter name="accessory" behavior="optional">
+					<string behavior="ref/Accessory" />
+				</parameter>
+				
+				<parameter name="righthand">
+					<string behavior="ref/RightHand" />
+				</parameter>
+				<parameter name="lefthand">
+					<string behavior="ref/LeftHand" />
+				</parameter>
+				
+				<parameter name="affiliation">
+					<string behavior="ref/Group" />
+				</parameter>
+				
+				<parameter name="voice">
+					<string behavior="ref/Voice" />
+				</parameter>
+				
+				<parameter name="room">
+					<string behavior="ref/MRoom" />
+				</parameter>
+			</block>
+			
+			<block name="MRoom">
+				<parameter name="nickname">
+					<string>
+						<regex>Bar|Planetscape|Deck|ShipDealer|Equipment|Trader</regex>
+					</string>
+				</parameter>
+				<parameter name="character_density">
+					<int>
+						<numeric>[1,inf[</numeric>
+					</int>
+				</parameter>
+				<parameter name="fixture" behavior="optional">
+					<string />
+					<string />
+					<string />
+					<string>
+						<regex>bartender|ShipDealer|Equipment|Trader</regex>
+					</string>
+				</parameter>
+			</block>
+		</block>
+		<block name="Room">
+			<parameter name="nickname">
+				<string>
+					<regex>Bar|Cityscape|Planetscape|Deck|ShipDealer|Equipment|Trader</regex>
+				</string>
+			</parameter>
+			<parameter name="file">
+				<path>
+					<pattern>*.ini</pattern>
+				</path>
+			</parameter>
+		</block>
+		<block name="BaseInfo">
+			<required>nickname</required>
+			<parameter name="start_room">
+				<string>
+					<regex>Bar|Cityscape|Planetscape|Deck|ShipDealer|Equipment|Trader</regex>
+				</string>
+			</parameter>
+		</block>
+		<block name="EncounterParameters">
+			<parameter name="nickname">
+				<string />
+			</parameter>
+			<parameter name="filename">
+				<path>
+					<pattern>*.ini</pattern>
+				</path>
+			</parameter>
+		</block>
+	</definitions>
+	<!-- +++++++++++++++ -->
+	<!--   ASSUMPTIONS   -->
+	<!-- +++++++++++++++ -->
+	
+	<!--	Assumptions are parameters that do not reside in any particular block.
+			They are applied to blocks after the initial pass has been done and thus
+			should a block have a parameter defined in the assumptions, the block's
+			definition will always take precedence. -->
+	<assumptions>
+		<parameter name="nickname">
+			<string behavior="id" />
+		</parameter>
+		<parameter name="ids_name">
+			<int behavior="name" />
+		</parameter>
+		<parameter name="ids_info">
+			<int behavior="info" />
+		</parameter>
+		<parameter name="DA_archetype">
+			<path />
+		</parameter>
+		<parameter name="material_library" behavior="repeatable">
+			<path />
+		</parameter>
+		<parameter name="LODranges">
+			<int>
+				<numeric>[0,0]</numeric>
+			</int>
+			<int behavior="repeatable" />
+		</parameter>
+		<parameter name="msg_id_prefix">
+			<string />
+		</parameter>
+		<parameter name="mass">
+			<float>
+				<numeric>[0,inf[</numeric>
+			</float>
+		</parameter>
+		<parameter name="hit_pts">
+			<float>
+				<numeric>]0,inf[</numeric>
+			</float>
+		</parameter>
+		<parameter name="volume">
+			<float>
+				<numeric>[0,inf[</numeric>
+			</float>
+		</parameter>
+		<parameter name="lootable">
+			<boolean />
+		</parameter>
+		<parameter name="parent_impulse">
+			<float>
+				<numeric>[0,inf[</numeric>
+			</float>
+		</parameter>
+		<parameter name="child_impulse">
+			<float>
+				<numeric>[0,inf[</numeric>
+			</float>
+		</parameter>
+	</assumptions>
+	<references>
+		<!--<entry>
+			Li01
+		</entry>-->
+	</references>
+</data>
